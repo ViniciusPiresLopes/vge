@@ -1,4 +1,4 @@
-class VariableSystem:
+class VariableManager:
     def __init__(self):
         self.variables = {}
     
@@ -13,7 +13,7 @@ class VariableSystem:
         return self.variables.get(var_name, default)
     
     def copy(self):
-        vs_copy = VariableSystem()
+        vs_copy = VariableManager()
         for k, v in self.variables.items():
             vs_copy.push(k, v)
         

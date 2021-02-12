@@ -1,7 +1,7 @@
 from .node import Node
 from .ids import MOVEABLE
 from ..utils.vector import Vector2
-from ..utils.variable_system import VariableSystem
+from ..utils.variable_manager import VariableManager
 
 
 class Moveable(Node):
@@ -11,10 +11,10 @@ class Moveable(Node):
         self.scale = Vector2(scale_x, scale_y)
         self.origin = Vector2(kwargs.get("origin_x", 0), kwargs.get("origin_y", 0))
         self.scaled_origin = Vector2(self.origin.x, self.origin.y)
-        self.global_ = VariableSystem()
+        self.global_ = VariableManager()
         self.global_.push("position", Vector2(self.position.x, self.position.y))
         self.global_.push("scale", Vector2(self.scale.x, self.scale.y))
-        self.previous = VariableSystem()
+        self.previous = VariableManager()
         self.previous.push("position", Vector2(self.position.x, self.position.y))
         self.previous.push("scale", Vector2(self.scale.x, self.scale.y))
     
