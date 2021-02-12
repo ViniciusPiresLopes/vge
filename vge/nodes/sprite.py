@@ -38,13 +38,13 @@ class Sprite(Moveable):
                 self.flipped_surface = pygame.transform.flip(self.surface, self.flip_h, self.flip_v)
 
             # Scale image
-            self.scaled_surface_width = round(self.surface_width * self.globals.scale.x)
-            self.scaled_surface_height = round(self.surface_height * self.globals.scale.y)
+            self.scaled_surface_width = round(self.surface_width * self.global_.get("scale").x)
+            self.scaled_surface_height = round(self.surface_height * self.global_.get("scale").y)
             self.scaled_surface = pygame.transform.scale(self.flipped_surface, (self.scaled_surface_width, self.scaled_surface_height))
 
             # Draw image
-            position_x = self.globals.position.x - self.scaled_origin.x
-            position_y = self.globals.position.y - self.scaled_origin.y
+            position_x = self.global_.get("position").x - self.scaled_origin.x
+            position_y = self.global_.get("position").y - self.scaled_origin.y
             self.scene.engine.window.surface.blit(self.scaled_surface, (position_x, position_y))
     
     def on_update(self):

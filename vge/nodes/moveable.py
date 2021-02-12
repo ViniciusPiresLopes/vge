@@ -1,8 +1,7 @@
 from .node import Node
 from .ids import MOVEABLE
 from ..utils.vector import Vector2
-from ..utils.globals import Global
-from ..utils.last import Last
+from ..utils.variable_system import VariableSystem
 
 
 class Moveable(Node):
@@ -10,10 +9,14 @@ class Moveable(Node):
         super(Moveable, self).__init__(id=kwargs.get("id", MOVEABLE))
         self.position = Vector2(x, y)
         self.scale = Vector2(scale_x, scale_y)
-        self.globals = Global(self.position, self.scale)
-        self.last = Last(self.position, self.scale, self.globals)
         self.origin = Vector2(kwargs.get("origin_x", 0), kwargs.get("origin_y", 0))
         self.scaled_origin = Vector2(self.origin.x, self.origin.y)
+        self.global_ = VariableSystem()
+        self.global_.push("position", Vector2(self.position.x, self.position.y))
+        self.global_.push("scale", Vector2(self.scale.x, self.scale.y))
+        self.previous = VariableSystem()
+        self.previous.push("position", Vector2(self.position.x, self.position.y))
+        self.previous.push("scale", Vector2(self.scale.x, self.scale.y))
     
     def set_position(self, x, y):
         self.position.x = x
@@ -28,27 +31,35 @@ class Moveable(Node):
 
         self.position.x += converted_offset.x
         self.position.y += converted_offset.y
+    
+    def update_previous_variables(self):
+        self.previous.push("position", Vector2(self.position.x, self.position.y))
+        self.previous.push("scale", Vector2(self.scale.x, self.scale.y))
+        self.previous.push_vs("global", self.global_)
 
     def update_global_variables(self):
-        # Update last variables
-        self.last.update_variables(self.position, self.scale, self.globals)
-
-        # Update global variables
+        # Find closest moveable parent
         current_parent = self.parent
         while not isinstance(current_parent, Moveable):
             if current_parent is None: break
 
             current_parent = current_parent.parent
 
+        # Update global variables
         if current_parent is not None:
-            self.globals.position.x = current_parent.globals.position.x + self.position.x
-            self.globals.position.y = current_parent.globals.position.y + self.position.y
-            self.globals.scale.x = current_parent.globals.scale.x * self.scale.x
-            self.globals.scale.y = current_parent.globals.scale.y * self.scale.y
-            self.scaled_origin.x = self.origin.x * self.globals.scale.x
-            self.scaled_origin.y = self.origin.y * self.globals.scale.y
+            self.global_.push("position", Vector2(
+                current_parent.global_.get("position").x + self.position.x,
+                current_parent.global_.get("position").y + self.position.y
+            ))
+            self.global_.push("scale", Vector2(
+                current_parent.global_.get("scale").x * self.scale.x,
+                current_parent.global_.get("scale").y * self.scale.y
+            ))
+            self.scaled_origin.x = self.origin.x * self.global_.get("scale").x
+            self.scaled_origin.y = self.origin.y * self.global_.get("scale").y
 
     def _update(self):
+        self.update_previous_variables()
         self.update_global_variables()
 
         for node in self._nodes:

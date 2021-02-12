@@ -1,5 +1,6 @@
 from ..nodes.moveable import Moveable
 from ..nodes.ids import SCENE
+from ..utils.vector import Vector2
 
 
 class Scene(Moveable):
@@ -21,5 +22,6 @@ class Scene(Moveable):
         return self._nodes[-1]
 
     def update_global_variables(self):
-        self.globals.position.x = self.position.x
-        self.globals.position.y = self.position.y
+        self.global_.push("position", Vector2(
+            self.position.x, self.position.y
+        ))
