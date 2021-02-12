@@ -33,6 +33,7 @@ class Engine:
     
     def make_current_scene(self, name):
         self.current_scene = self.scenes[name](engine=self)
+        self.current_scene.name = name
         self.current_scene.on_start()
     
     def get_timestep(self):

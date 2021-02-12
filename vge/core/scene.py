@@ -13,6 +13,7 @@ class Scene(Moveable):
     def add_node(self, name, node):
         self._nodes.append(node)
         self.nodes_ref[name] = self._nodes[-1]
+        self._nodes[-1].name = name
         self._nodes[-1].scene = self
         self._nodes[-1].parent = self
         self._nodes[-1].on_start()

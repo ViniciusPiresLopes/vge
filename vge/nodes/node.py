@@ -8,6 +8,7 @@ from .ids import NODE
 class Node:
     def __init__(self, **kwargs):
         self.id = kwargs.get("id", NODE)
+        self.name = None
         self.scene = None
         self.parent = None
         self._nodes = []
@@ -16,6 +17,7 @@ class Node:
     def add_node(self, name, node):
         self._nodes.append(node)
         self.nodes_ref[name] = self._nodes[-1]
+        self._nodes[-1].name = name
         self._nodes[-1].scene = self.scene
         self._nodes[-1].parent = self
         self._nodes[-1].on_start()
@@ -54,4 +56,4 @@ class Node:
             space += tab
     
     def __repr__(self):
-        return f"[{self.id}]"
+        return f"[{self.name}]:[{self.id}]"

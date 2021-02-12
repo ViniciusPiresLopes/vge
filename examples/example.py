@@ -27,6 +27,7 @@ class MainScene(Scene):
         self.add_node("Camera", self.camera)
         self.add_node("Player", self.player)
         self.player.add_node("Anim", self.anim)
+        self.show_children_graph()
 
     def on_update(self):
         if self.timer.is_done():
