@@ -45,15 +45,15 @@ class Node:
         
         self.on_update()
     
-    def show_children_graph(self):
+    def print_children_tree(self, **kwargs):
         tab = "  "
-        space = ""
+        space = tab * kwargs.get("current_time", 0)
 
         for child in self._nodes:
             print(end=space)
             print(f"-{child}")
+            child.print_children_tree(current_time=kwargs.get("current_time", 0) + 1)
 
-            space += tab
     
     def __repr__(self):
         return f"[{self.name}]:[{self.id}]"

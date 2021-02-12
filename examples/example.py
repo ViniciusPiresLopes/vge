@@ -22,12 +22,14 @@ class MainScene(Scene):
         self.anim = AnimatedSprite([
             f"animation/Flower{i + 1}.png" for i in range(30)
         ], 15, x=0, y=0, scale_x=0.5, scale_y=0.5, origin_x=128, origin_y=128, flip_v=True)
-
+        
         self.add_node("Timer", self.timer)
         self.add_node("Camera", self.camera)
         self.add_node("Player", self.player)
         self.player.add_node("Anim", self.anim)
-        self.show_children_graph()
+
+        print("--- Scene Tree ---")
+        self.print_children_tree()
 
     def on_update(self):
         if self.timer.is_done():
